@@ -1,0 +1,251 @@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.2/seedrandom.min.js"></script>
+
+<script type="text/javascript">
+function int(n) {
+	return parseInt(n,10) | 0;
+}
+
+
+function listChoose(list, input) {
+	for(var i = 0; i < list.length; i++) {
+		if (input >= list[i][0]) return list[i][1];
+	}
+	
+	return 'ERROR IN LIST';
+}
+
+
+function BLOODING(input) {
+	 return listChoose([
+		 [99, 'Centaur'],
+		 [98, 'Gargoyle'],
+		 [97, 'Vampire'],
+		 [96, 'Fairy'],
+		 [95, 'Giant'],
+		 [94, 'Goblin'],
+		 [93, 'Dragon'],
+		 [92, 'Mer'],
+		 [91, 'Serpent'],
+		 [90, 'Avian'],
+		 [89, 'Dwarf'],
+		 [87, 'Beast (Wolf)'],
+		 [85, 'Beast (Bear)'],
+		 [83, 'Beast (Panther)'],
+		 [0, 'None']
+	 ], int(input));
+}
+
+
+function CRAFT(threshold) {
+	return function(input) {
+		return (input >= threshold) ? "Yes" : "No";
+	};
+}
+
+
+function METAMORPH(input) {
+	return listChoose([
+		[99, 'Doppler'],
+		[97, 'Full'],
+		[93, 'Major'],
+		[85, 'Minor'],
+		[ 0, 'None']
+	], int(input));
+}
+
+
+function PROGRESSION(input) {
+	return listChoose([
+		[95, 'Prodigy'],
+		[85, 'Fast'],
+		[15, 'Normal'],
+		[ 5, 'Slow'],
+		[ 0, 'Stunted']
+	], int(input));
+}
+
+
+function RATING(input, alt) {
+	input = int(input) * 100 + int(alt);
+	
+	return listChoose([
+		[9990, 'Progenitor'],
+		[9950, 'Grand Archmage'],
+		[9900, 'Archmage'],
+		[9300, 'Grand Mage'],
+		[7700, 'Mage'],
+		[5400, 'Grand Sorceror'],
+		[2400, 'Sorceror'],
+		[1200, 'Witch/Warlock'],
+		[ 400, 'Apprentice'],
+		[ 100, 'Neophyte'],
+		[	20, 'Squib'],
+		[	 0, 'Mundane']
+	], int(input));
+}
+
+
+function REGEN(input, alt) {
+	alt = int(alt);
+	input = int(input);
+	
+	var regen = listChoose([
+		[99, 'Ancient'],
+		[94, 'Elder'],
+		[79, 'Master'],
+		[20, 'Adult'],
+		[10, 'Teen'],
+		[ 5, 'Child'],
+		[ 2, 'Infant'],
+		[ 0, 'None']
+	], int(input));
+	
+	if (input == 99 && alt >= 80) {
+		regen = 'Mythic';
+	}
+	
+	return regen;
+}
+
+
+function SCHOOL(input, alt) {
+	return 100 + input - alt;
+}
+
+
+function SEASON(input) {
+	return listChoose([
+		[90, 'Autumn'],
+		[80, 'Summer'],
+		[70, 'Spring'],
+		[60, 'Winter'],
+		[ 0, 'None']
+	], int(input));
+}
+
+
+function TALENT(input) {
+	return listChoose([
+		[95, '*Two'],
+		[90, 'Silent'],
+		[85, 'Reflexive'],
+		[70, 'Slow'],
+		[55, 'Rapid'],
+		[50, 'Twinning'],
+		[ 0, 'None']
+	], int(input));
+}
+
+
+function SIGHTEDNESS(input) {
+	return listChoose([
+		[99, 'Prophecy'],
+		[97, 'Second (*fairy)'],
+		[95, 'True'],
+		[85, 'Mage'],
+		[75, 'Dark'],
+		[ 0, 'None']
+	], int(input));
+}
+
+
+function randMage(seed) {
+	Math.seedrandom(seed);
+	
+	function randInt(limit) {
+		return Math.floor(Math.random() * limit);
+	}
+	
+	var mage = [
+		["Power", RATING, randInt(100), randInt(100)],
+		["Regen", REGEN, randInt(100), randInt(100)],
+		["Progression", PROGRESSION, randInt(100), randInt(100)],
+		
+		["Black", SCHOOL, randInt(100), randInt(100)],
+		["Neutral (gray)", SCHOOL, randInt(100), randInt(100)],
+		["White", SCHOOL, randInt(100), randInt(100)],
+		["Blood", SCHOOL, randInt(100), randInt(100)],
+		["Life", SCHOOL, randInt(100), randInt(100)],
+		["Moon (luna)", SCHOOL, randInt(100), randInt(100)],
+		["Moon (arcana)", SCHOOL, randInt(100), randInt(100)],
+		["Sun (sol)", SCHOOL, randInt(100), randInt(100)],
+		["Star", SCHOOL, randInt(100), randInt(100)],
+		["Air", SCHOOL, randInt(100), randInt(100)],
+		["Earth", SCHOOL, randInt(100), randInt(100)],
+		["Fire", SCHOOL, randInt(100), randInt(100)],
+		["Water", SCHOOL, randInt(100), randInt(100)],
+		["Spirit (fey)", SCHOOL, randInt(100), randInt(100)],
+		["Null", SCHOOL, randInt(100), randInt(100)],
+		
+		// ["Overall (1500)", ],
+		
+		["Blooding", BLOODING, randInt(100), randInt(100)],
+		["Metamorph", METAMORPH, randInt(100), randInt(100)],
+		["Abilities", TALENT, randInt(100), randInt(100)],
+		["Sightedness", SIGHTEDNESS, randInt(100), randInt(100)],
+		["Season", SEASON, randInt(100), randInt(100)],
+		
+		["Runes", CRAFT(80), randInt(100), randInt(100)],
+		["Wards", CRAFT(80), randInt(100), randInt(100)],
+		["Enchantment", CRAFT(90), randInt(100), randInt(100)],
+		["Wandcraft", CRAFT(90), randInt(100), randInt(100)],
+		["Gemcraft", CRAFT(95), randInt(100), randInt(100)],
+	];
+	
+	return _.map(mage, function(row) {
+		row[1] = row[1](row[2], row[3]);
+		
+		return row;
+	});
+}
+
+
+$(document).ready(function() {
+	var template = _.template($("#table_mage").html());
+	
+	$("#generate").click(function(e) {
+		var seed;
+		
+		e.preventDefault();
+		
+		seed = $("#seed").val();
+		
+		$("#output").html(template({
+			data : randMage(seed)
+		}));
+	});
+});
+</script>
+
+<script type="text/x-lodash-tempalte" id="table_mage">
+	<table>
+		<thead>
+			<tr>
+				<th>Trait</th>
+				<th>Value</th>
+				<th>Rand 1</th>
+				<th>Rand 2</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% _.each(data, function(row) { %>
+			<tr>
+				<td><%= row[0] %></td>
+				<td><b><%= row[1] %></b></td>
+				<td><%= row[2] %></td>
+				<td><%= row[3] %></td>
+			</tr>
+			<% }) %>
+		<tbody>
+	</table>
+</script>
+
+<body>
+	<div id="input">
+		<input type="text" id="seed" value="47" />
+		<button id="generate">Generate</button>
+	</div>
+	<div id="output"></div>
+</body>
